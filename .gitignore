@@ -5,3 +5,7 @@ syntax: glob
 *.orig
 *.*~
 *.pyc
+build
+install
+log
+.null*

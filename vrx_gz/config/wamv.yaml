@@ -78,23 +78,23 @@ joy_teleop:
     left_thrust:
       type: topic
       interface_type: std_msgs/msg/Float64
-      topic_name: /wamv/thrusters/left/thrust
+      topic_name: /model/muslingevagt/joint/left_engine_propeller_joint/cmd_thrust
       deadman_buttons: [4]
       axis_mappings:
         data:
           axis: 1
-          scale: 1000.0
+          scale: 50.0
           offset: 0
 
     right_thrust:
       type: topic
       interface_type: std_msgs/msg/Float64
-      topic_name: /wamv/thrusters/right/thrust
+      topic_name: /model/muslingevagt/joint/right_engine_propeller_joint/cmd_thrust
       deadman_buttons: [4]
       axis_mappings:
         data:
-          axis: 3
-          scale: 1000.0
+          axis: 4
+          scale: 50.0
           offset: 0
 
     left_pos:
@@ -127,4 +127,4 @@ joy_teleop:
       message_value:
         data:
           value: true
-    
+

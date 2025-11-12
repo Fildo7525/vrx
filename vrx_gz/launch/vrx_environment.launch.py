@@ -19,6 +19,7 @@ from launch.actions import OpaqueFunction
 from launch.substitutions import LaunchConfiguration
 import os
 
+import launch_ros.actions
 import vrx_gz.launch
 from vrx_gz.model import Model
 
@@ -43,7 +44,7 @@ def launch(context, *args, **kwargs):
             models = Model.FromConfig(stream)
 
     world_name, ext = os.path.splitext(world_name)
-    launch_processes.extend(vrx_gz.launch.simulation(world_name, headless, 
+    launch_processes.extend(vrx_gz.launch.simulation(world_name, headless,
                                                      gz_paused, extra_gz_args))
     world_name_base = os.path.basename(world_name)
     launch_processes.extend(vrx_gz.launch.spawn(sim_mode, world_name_base, models, robot))
@@ -55,7 +56,22 @@ def launch(context, *args, **kwargs):
 
 
 def generate_launch_description():
+    bridge_node = launch_ros.actions.Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='gz_bridge_engine_thrust',
+        arguments=[
+            '/model/muslingevagt/joint/left_engine_propeller_joint/cmd_thrust@std_msgs/msg/Float64@gz.msgs.Double',
+            '/model/muslingevagt/joint/right_engine_propeller_joint/cmd_thrust@std_msgs/msg/Float64@gz.msgs.Double',
+            '/world/muslinge_world/model/muslingevagt/link/base_link/sensor/imu/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            '/world/muslinge_world/model/muslingevagt/link/base_link/sensor/magnetometer/magnetometer@sensor_msgs/msg/MagneticField[gz.msgs.Magnetometer',
+            '/world/muslinge_world/model/muslingevagt/link/base_link/sensor/navsat/navsat@sensor_msgs/msg/NavSatFix[gz.msgs.NavSat',
+        ],
+        output='screen',
+    )
+
     return LaunchDescription([
+        bridge_node,
         # Launch Arguments
         DeclareLaunchArgument(
             'world',
